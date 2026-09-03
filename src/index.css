@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+/* Paleta extraída do logo (Créperia da Praia): vinho (fundo) + dourado (texto). */
+@theme {
+  --color-brand-50: hsl(323 45% 97%);
+  --color-brand-100: hsl(323 45% 93%);
+  --color-brand-200: hsl(323 42% 85%);
+  --color-brand-300: hsl(323 40% 74%);
+  --color-brand-400: hsl(323 40% 58%);
+  --color-brand-500: hsl(323 40% 46%);
+  --color-brand-600: hsl(323 40% 34%); /* ~#7b3460, cor do fundo do logo */
+  --color-brand-700: hsl(323 45% 26%);
+  --color-brand-800: hsl(323 48% 19%);
+  --color-brand-900: hsl(323 50% 13%);
+  --color-brand-950: hsl(323 55% 8%);
+
+  --color-gold-400: hsl(38 45% 74%);
+  --color-gold-500: hsl(38 45% 62%); /* ~#cfac6f, cor do texto do logo */
+  --color-gold-600: hsl(38 40% 50%);
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  @apply bg-stone-50 text-stone-900 antialiased;
+}
+
+#root {
+  min-height: 100svh;
+}
