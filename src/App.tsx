@@ -1,12 +1,24 @@
 import { Navigate, Outlet, Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { ProtectedRoute } from './components/ProtectedRoute'
-import { AuthProvider } from './context/AuthContext'
+import { AuthProvider, useAuth } from './context/AuthContext'
 import { AgendaPage } from './pages/AgendaPage'
 import { EventDetailPage } from './pages/EventDetailPage'
 import { EventNewPage } from './pages/EventNewPage'
 import { EventsListPage } from './pages/EventsListPage'
 import { LoginPage } from './pages/LoginPage'
+
+/**
+ * Home do app: cada tipo de sessão tem um destino próprio. Sem isso, "/" mandava
+ * todo mundo para /eventos e a sessão de link de evento entrava em loop de redirect.
+ */
+function HomeRedirect() {
+  const { isAuthenticated, scope, eventId } = useAuth()
+
+  if (!isAuthenticated) return <Navigate to="/login" replace />
+  if (scope === 'event' && eventId) return <Navigate to={`/eventos/${eventId}`} replace />
+  return <Navigate to="/eventos" replace />
+}
 
 function AppShell() {
   return (
@@ -25,7 +37,7 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
 
           <Route element={<AppShell />}>
-            <Route path="/" element={<Navigate to="/eventos" replace />} />
+            <Route path="/" element={<HomeRedirect />} />
 
             <Route
               path="/eventos"
@@ -56,7 +68,7 @@ export default function App() {
               }
             />
 
-            <Route path="*" element={<Navigate to="/eventos" replace />} />
+            <Route path="*" element={<HomeRedirect />} />
           </Route>
         </Routes>
       </Router>

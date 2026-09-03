@@ -1,11 +1,11 @@
 import { useState, type FormEvent } from 'react'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { apiErrorMessage } from '../lib/api'
 import logo from '../assets/logo.png'
 
 export function LoginPage() {
-  const { isAuthenticated, loginWithPassword } = useAuth()
+  const { isAuthenticated, scope, eventId, loginWithPassword } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const [password, setPassword] = useState('')
@@ -13,10 +13,14 @@ export function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  if (isAuthenticated) {
+  // Só a sessão com acesso total pula o login. Com o token de evento a pessoa fica
+  // no formulário, podendo entrar com a senha da equipe ou voltar para o seu evento.
+  if (isAuthenticated && scope === 'full') {
     const from = (location.state as { from?: string } | null)?.from ?? '/eventos'
     return <Navigate to={from} replace />
   }
+
+  const eventSession = isAuthenticated && scope === 'event'
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
@@ -53,6 +57,22 @@ export function LoginPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-6 pb-6 pt-4">
+            {eventSession && (
+              <p className="rounded-md border border-brand-200 bg-brand-50 px-3 py-2 text-sm text-brand-800">
+                Sua sessão atual veio do link de um evento e abre apenas ele. Entre com a senha da equipe
+                para acessar o portal
+                {eventId && (
+                  <>
+                    {' '}ou{' '}
+                    <Link to={`/eventos/${eventId}`} className="font-medium underline">
+                      volte para o seu evento
+                    </Link>
+                  </>
+                )}
+                .
+              </p>
+            )}
+
             <div>
               <label htmlFor="password" className="mb-1 block text-sm font-medium text-stone-700">
                 Senha
