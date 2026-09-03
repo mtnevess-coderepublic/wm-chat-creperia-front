@@ -86,20 +86,6 @@ export function LoginPage() {
           </form>
         </div>
       </div>
-
-      <div className="absolute right-0 bottom-4 left-0 z-20 text-center text-xs text-white/40">
-        <p>
-          Desenvolvido por{' '}
-          <a
-            href="https://www.coderepublic.com.br/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium transition-colors hover:text-white/70"
-          >
-            CodeRepublic
-          </a>
-        </p>
-      </div>
     </div>
   )
 }
